@@ -1,16 +1,22 @@
 #include "gnss_sdr_client.h"
 
 Gnss_Sdr_Client::Gnss_Sdr_Client(const unsigned short synchro_port,
-                                 const unsigned short monitor_port)
+                                 const unsigned short monitor_port,
+                                 const unsigned short sat_port)
     : monitor_socket{io_service},
       syncro_socket{io_service},
+      sat_socket{io_service},
       monitor_endpoint{boost::asio::ip::udp::v4(), monitor_port},
-      syncro_endpoint{boost::asio::ip::udp::v4(), synchro_port} {
+      syncro_endpoint{boost::asio::ip::udp::v4(), synchro_port},
+      sat_endpoint{boost::asio::ip::udp::v4(), sat_port}
+{
     // open and bind the sockets
     monitor_socket.open(monitor_endpoint.protocol(), error);
     syncro_socket.open(syncro_endpoint.protocol(), error);
+    sat_socket.open(sat_endpoint.protocol(), error);
     monitor_socket.bind(monitor_endpoint, error);
     syncro_socket.bind(syncro_endpoint, error);
+    sat_socket(sat_endpoint, error);
 }
 
 bool Gnss_Sdr_Client::read_gnss_monitor(gnss_sdr::MonitorPvt& monitor) {
@@ -32,6 +38,8 @@ bool Gnss_Sdr_Client::read_gnss_synchro(gnss_sdr::Observables& stocks) {
     // Deserialize a stock of Gnss_Synchro objects from the binary string.
     return stocks.ParseFromString(data);
 }
+
+
 
 void Gnss_Sdr_Client::populate_channels(gnss_sdr::Observables& stocks) {
     for (std::size_t i = 0; i < stocks.observable_size(); i++) {
