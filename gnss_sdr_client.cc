@@ -16,7 +16,7 @@ Gnss_Sdr_Client::Gnss_Sdr_Client(const unsigned short synchro_port,
     sat_socket.open(sat_endpoint.protocol(), error);
     monitor_socket.bind(monitor_endpoint, error);
     syncro_socket.bind(syncro_endpoint, error);
-    sat_socket(sat_endpoint, error);
+    sat_socket.bind(sat_endpoint, error);
 }
 
 bool Gnss_Sdr_Client::read_gnss_monitor(gnss_sdr::MonitorPvt& monitor) {
@@ -39,7 +39,15 @@ bool Gnss_Sdr_Client::read_gnss_synchro(gnss_sdr::Observables& stocks) {
     return stocks.ParseFromString(data);
 }
 
+bool Gnss_Sdr_Client::read_gnss_sat(gnss_sdr::SatPvt& sat) {
+    char buff[2000];  // Buffer for storing the received data.
 
+    // This call will block until one or more bytes of data has been received.
+    int bytes = sat_socket.receive(boost::asio::buffer(buff));
+    std::string data(&buff[0], bytes);
+    // Deserialize a stock of Gnss_Synchro objects from the binary string.
+    return sat.ParseFromString(data);
+}
 
 void Gnss_Sdr_Client::populate_channels(gnss_sdr::Observables& stocks) {
     for (std::size_t i = 0; i < stocks.observable_size(); i++) {
@@ -81,6 +89,9 @@ bool Gnss_Sdr_Client::print_table() {
                   << monitor.pos_z() << " " << monitor.latitude() << " "
                   << monitor.longitude() << " " << monitor.height()
                   << std::endl;
+    }
+    if(read_gnss_sat(sat)) {
+        std::cout << "obtaining sat" << std::endl;
     }
     return true;
 }

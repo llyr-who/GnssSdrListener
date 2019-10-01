@@ -41,28 +41,6 @@ message GnssSynchro {
    float prompt = 28;          
    float late = 29;            
    float very_late = 30;
-
-   // supp. sat data
-   int64 Sat_Count = 31;
-   repeated double Sat_x = 32;
-   repeated double Sat_y = 33;
-   repeated double Sat_z = 34;
-
-   repeated double Sat_vx = 35;
-   repeated double Sat_vy = 36;
-   repeated double Sat_vz = 37;
-
-   int64 Week = 38;
-
-   // These are only set when a new USER position is obtained
-   bool Has_User_Position = 39;
-   double User_x = 40;
-   double User_y = 41;
-   double User_z = 42;
-
-   double User_vx = 43;
-   double User_vy = 44;
-   double User_vz = 45;
 }
 
 /* Observables represents a collection of GnssSynchro annotations */
