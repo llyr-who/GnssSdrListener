@@ -6,6 +6,7 @@
 #include "gnss_synchro.pb.h"
 #include "monitor_pvt.pb.h"
 #include "sat_pvt.pb.h"
+#include "queue.h"
 
 class Gnss_Sdr_Client {
 public:
@@ -39,6 +40,13 @@ private:
     gnss_sdr::SatPvt sat;
     std::thread sat_thread;
     void sat_task();
+
+    // thread-safe queue
+    Queue<string> q;
+    // consumer function that pops of the queue
+    void consumer() {
+        // ...
+    }
 };
 
 #endif
