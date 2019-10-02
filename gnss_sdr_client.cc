@@ -91,7 +91,16 @@ bool Gnss_Sdr_Client::print_table() {
                   << std::endl;
     }
     if(read_gnss_sat(sat)) {
-        std::cout << "obtaining sat" << std::endl;
+        std::cout << " X "
+                  << " Y "
+                  << " Z "
+                  << " VX "
+                  << " VY "
+                  << " VZ " << std::endl;
+        std::cout << sat.pos_x() << " " << sat.pos_y() << " "
+                  << sat.pos_z() << " " << sat.vel_x() << " "
+                  << sat.vel_y() << " " << sat.vel_z()
+                  << std::endl;
     }
     return true;
 }

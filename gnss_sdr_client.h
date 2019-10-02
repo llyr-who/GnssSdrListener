@@ -4,6 +4,7 @@
 #include <boost/asio.hpp>
 #include "gnss_synchro.pb.h"
 #include "monitor_pvt.pb.h"
+#include "sat_pvt.pb.h"
 
 class Gnss_Sdr_Client {
 public:

@@ -16,7 +16,12 @@ if(${Protobuf_VERSION} VERSION_LESS "3.0.0")
      message(FATAL_ERROR "Fatal error: Protocol Buffers >= v3.0.0 required.")
 endif()
 
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${CMAKE_SOURCE_DIR}/gnss_synchro.proto ${CMAKE_SOURCE_DIR}/monitor_pvt.proto)
+
+# this needs to change
+set(PATHTOPROTO "/Users/anthony/Documents/gnss-sdr/docs/protobuf")
+
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PATHTOPROTO}/gnss_synchro.proto ${PATHTOPROTO}/monitor_pvt.proto
+    ${PATHTOPROTO}/sat_pvt.proto )
 
 add_library(monitoring_lib ${CMAKE_SOURCE_DIR}/gnss_sdr_client.cc ${PROTO_SRCS})
 
