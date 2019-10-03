@@ -69,19 +69,7 @@ void Gnss_Sdr_Client::synchro_task() {
     while (true) {
         if (read_gnss_synchro(stocks)) {
             populate_channels(stocks);
-            // Print table header.
-            for (const auto& c : channels) {
-                auto sync = c.second;
-                std::cout << "channel: " << c.first << std::endl;
-                std::cout << " VE "
-                          << " E "
-                          << " P "
-                          << " L "
-                          << " VL " << std::endl;
-                std::cout << sync.very_early() << " " << sync.early() << " "
-                          << sync.prompt() << " " << sync.late() << " "
-                          << sync.very_late() << std::endl;
-            }
+            w.write(channels);
         }
     }
 }
@@ -89,16 +77,7 @@ void Gnss_Sdr_Client::synchro_task() {
 void Gnss_Sdr_Client::monitor_task() {
     while (true) {
         if (read_gnss_monitor(monitor)) {
-            std::cout << " X "
-                      << " Y "
-                      << " Z "
-                      << " lat "
-                      << " long "
-                      << " alt " << std::endl;
-            std::cout << monitor.pos_x() << " " << monitor.pos_y() << " "
-                      << monitor.pos_z() << " " << monitor.latitude() << " "
-                      << monitor.longitude() << " " << monitor.height()
-                      << std::endl;
+            w.write(monitor);
         }
     }
 }
@@ -106,15 +85,8 @@ void Gnss_Sdr_Client::monitor_task() {
 void Gnss_Sdr_Client::sat_task() {
     while (true) {
         if (read_gnss_sat(sat)) {
-            std::cout << " X "
-                      << " Y "
-                      << " Z "
-                      << " VX "
-                      << " VY "
-                      << " VZ " << std::endl;
-            std::cout << sat.pos_x() << " " << sat.pos_y() << " " << sat.pos_z()
-                      << " " << sat.vel_x() << " " << sat.vel_y() << " "
-                      << sat.vel_z() << std::endl;
+            std::string s = "sat";
+            w.write(s);
         }
     }
 }
