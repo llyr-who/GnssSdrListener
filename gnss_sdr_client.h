@@ -12,7 +12,8 @@ class Gnss_Sdr_Client {
 public:
     Gnss_Sdr_Client(const unsigned short synchro_port,
                     const unsigned short monitor_port,
-                    const unsigned short sat_port);
+                    const unsigned short sat_port,
+                    Writer& w);
     ~Gnss_Sdr_Client();
     bool read_gnss_synchro(gnss_sdr::Observables& stocks);
     bool read_gnss_monitor(gnss_sdr::MonitorPvt& monitor);
@@ -41,7 +42,7 @@ private:
     std::thread sat_thread;
     void sat_task();
 
-    Writer w;
+    Writer* w;
 };
 
 #endif

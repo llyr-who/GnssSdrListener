@@ -14,7 +14,7 @@ class Writer {
     std::ostream* m_out;
 
 public:
-    Writer() : m_out{&std::cout} {};
+    Writer(std::ostream& os) : m_out{&os} {};
 
     void write(std::map<int, gnss_sdr::GnssSynchro>& channels) {
 
@@ -24,8 +24,9 @@ public:
             std::ostream& output = *m_out;
             for (const auto& c : channels) {
                 // clang-format off
+                // IqData
                 auto sync = c.second;
-                output << c.first << " "
+                output << "IqData, " << " "
                        << sync.very_early()
                        << '\n';
             }

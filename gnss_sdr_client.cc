@@ -2,13 +2,14 @@
 
 Gnss_Sdr_Client::Gnss_Sdr_Client(const unsigned short synchro_port,
                                  const unsigned short monitor_port,
-                                 const unsigned short sat_port)
+                                 const unsigned short sat_port, Writer& w)
     : monitor_socket{io_service},
       synchro_socket{io_service},
       sat_socket{io_service},
       monitor_endpoint{boost::asio::ip::udp::v4(), monitor_port},
       synchro_endpoint{boost::asio::ip::udp::v4(), synchro_port},
-      sat_endpoint{boost::asio::ip::udp::v4(), sat_port} {
+      sat_endpoint{boost::asio::ip::udp::v4(), sat_port},
+      w(&w){
     // open and bind the sockets
     monitor_socket.open(monitor_endpoint.protocol(), error);
     synchro_socket.open(synchro_endpoint.protocol(), error);
@@ -69,7 +70,7 @@ void Gnss_Sdr_Client::synchro_task() {
     while (true) {
         if (read_gnss_synchro(stocks)) {
             populate_channels(stocks);
-            w.write(channels);
+            w->write(channels);
         }
     }
 }
@@ -77,7 +78,7 @@ void Gnss_Sdr_Client::synchro_task() {
 void Gnss_Sdr_Client::monitor_task() {
     while (true) {
         if (read_gnss_monitor(monitor)) {
-            w.write(monitor);
+            w->write(monitor);
         }
     }
 }
@@ -85,8 +86,7 @@ void Gnss_Sdr_Client::monitor_task() {
 void Gnss_Sdr_Client::sat_task() {
     while (true) {
         if (read_gnss_sat(sat)) {
-            std::string s = "sat";
-            w.write(s);
+            w->write(sat);
         }
     }
 }
